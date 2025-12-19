@@ -79,21 +79,13 @@ def dashboard_view():
         return redirect(url_for('login'))
     return render_template('dashboard.html')
 
-# --- Chat App Routes (Public) ---
-CHAT_APP_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'chat-app')
+# --- Chat App Routes ---
 
 @app.route('/chat')
-def chat_redirect():
-    # Force trailing slash to ensure relative links (style.css, app.js) work correctly
-    return redirect('/chat/')
-
 @app.route('/chat/')
 def chat_home():
-    return send_from_directory(CHAT_APP_DIR, 'index.html')
+    return render_template('chat.html')
 
-@app.route('/chat/<path:filename>')
-def chat_files(filename):
-    return send_from_directory(CHAT_APP_DIR, filename) 
 # -----------------------
 
 @app.route('/api/stats')

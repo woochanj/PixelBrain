@@ -76,7 +76,7 @@ echo.
 echo [INFO] PixelBrain 서버 시작...
 echo [INFO] http://localhost:5000
 echo.
-%PYTHON_CMD% dashboard/server.py
+%PYTHON_CMD% src/server.py
 if %errorlevel% neq 0 goto :SERVER_FAIL
 
 pause
