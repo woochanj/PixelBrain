@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ollama Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #202028;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #f7d51d;
+            text-shadow: 4px 4px 0px #e02c2c, 8px 8px 0px #242424;
+            margin-bottom: 50px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pixel-btn {
+            background-color: #fff;
+            border: 4px solid #000;
+            padding: 20px 40px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+            box-shadow: 8px 8px 0px #000;
+            transition: transform 0.1s, box-shadow 0.1s;
+            position: relative;
+        }
+
+        .pixel-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .btn-chat {
+            background-color: #55acee;
+            color: white;
+        }
+
+        .btn-dash {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>PixelBrain 16-BIT</h1>
+
+    <div class="btn-container">
+        <a href="/chat" class="pixel-btn btn-chat">
+            <span class="icon">💬</span>
+            START CHAT
+        </a>
+
+        <a href="/dashboard" class="pixel-btn btn-dash">
+            <span class="icon">⚙️</span>
+            DASHBOARD
+        </a>
+    </div>
+
+</body>
+
+</html>

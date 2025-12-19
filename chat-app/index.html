@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gemma AI Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <div class="main-container">
+        <header class="chat-header">
+            <div class="header-left">
+                <a href="/" style="text-decoration: none;">
+                    <button class="pixel-btn">🏠 HOME</button>
+                </a>
+                <h1>PixelBrain</h1>
+            </div>
+
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span class="model-badge">12B Model</span>
+            </div>
+        </header>
+
+        <div id="chat-container" class="chat-container">
+            <div class="message ai-message">
+                <div class="message-content">
+                    안녕하세요! 무엇을 도와드릴까요?
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-wrapper">
+                <textarea id="user-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
+                <button id="send-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,263 @@
+/* Pixel Art / Terminal Theme */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+:root {
+    --bg-color: #2d1b2e;
+    /* Darker purple-ish grey for SNES vibe */
+    --chat-bg: #1c111c;
+    --primary: #ffcc00;
+    /* Gold */
+    /* Yellow from Home */
+    --accent: #ff3366;
+    /* Vibrant Red/Pink */
+    /* Red from Home */
+    --text: #e0e0e0;
+    --user-msg-bg: #4d9be6;
+    /* Softer Blue */
+    /* Blue from Home */
+    --ai-msg-bg: #2d2d3a;
+    --border-color: #000;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    font-family: 'VT323', monospace;
+    /* More readable pixel-like font for text */
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 800px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color);
+    border-left: 4px solid var(--border-color);
+    border-right: 4px solid var(--border-color);
+    box-sizing: border-box;
+}
+
+/* Header */
+.chat-header {
+    padding: 20px;
+    background-color: var(--primary);
+    border-bottom: 4px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.chat-header h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #000;
+    margin: 0;
+    text-shadow: 2px 2px 0 #fff;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pixel-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    background: #55acee;
+    color: #fff;
+    border: 2px solid #000;
+    padding: 8px 12px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 #000;
+    transition: all 0.1s;
+}
+
+.pixel-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 #000;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #00ff00;
+    border: 2px solid #000;
+    box-shadow: 2px 2px 0 #000;
+}
+
+.model-badge {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    background: #000;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 0;
+}
+
+/* Chat Area */
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: var(--chat-bg);
+    /* CRT Scanline effect */
+    background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+}
+
+.message {
+    max-width: 85%;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.3s steps(5);
+}
+
+.ai-message {
+    align-self: flex-start;
+}
+
+.user-message {
+    align-self: flex-end;
+}
+
+.message-content {
+    padding: 15px;
+    font-size: 20px;
+    /* VT323 needs larger size */
+    line-height: 1.4;
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0 #000;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.ai-message .message-content {
+    background-color: var(--ai-msg-bg);
+    color: #fff;
+}
+
+.user-message .message-content {
+    background-color: var(--user-msg-bg);
+    color: #000;
+}
+
+/* Input Area */
+.input-area {
+    padding: 20px;
+    background-color: var(--bg-color);
+    border-top: 4px solid var(--border-color);
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+#user-input {
+    flex: 1;
+    background-color: #fff;
+    border: 3px solid var(--border-color);
+    padding: 15px;
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    resize: none;
+    outline: none;
+    box-shadow: inset 4px 4px 0 #ccc;
+    color: #000;
+}
+
+#send-btn {
+    background-color: var(--accent);
+    border: 3px solid var(--border-color);
+    padding: 15px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #000;
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#send-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 #000;
+}
+
+#send-btn svg {
+    stroke: #fff;
+    width: 24px;
+    height: 24px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border: 2px solid #000;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Background globes removal */
+.background-globes {
+    display: none;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 10px;
+    animation: blink 1s infinite step-end;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}

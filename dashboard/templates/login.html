@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Check</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .login-box {
+            border: 4px solid #0f0;
+            padding: 40px;
+            box-shadow: 0 0 20px #0f0;
+            background-color: #111;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+
+        input[type="password"] {
+            background: #000;
+            border: 2px solid #0f0;
+            color: #0f0;
+            padding: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 80%;
+        }
+
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #fff;
+        }
+
+        .error {
+            color: red;
+            margin-top: 15px;
+            font-size: 10px;
+            min-height: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+        <h2>ACCESS RESTRICTED</h2>
+        <form method="POST" action="/login">
+            <div style="margin-bottom: 10px;">ENTER CODE:</div>
+            <input type="password" name="password" autofocus autocomplete="off">
+            <br>
+            <button type="submit">UNLOCK</button>
+            <div class="error">
+                {% if error %}
+                {{ error }}
+                {% endif %}
+            </div>
+        </form>
+        <div style="margin-top: 20px; font-size: 10px; color: #666;">
+            [ <a href="/" style="color: #666; text-decoration: none;">BACK TO HOME</a> ]
+        </div>
+    </div>
+
+</body>
+
+</html>
