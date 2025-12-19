@@ -38,6 +38,16 @@ npm-debug.log
 yarn-error.log
 .pnpm-debug.log
 
+# React / Vite
+dist/
+dist-ssr/
+*.local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # IDE
 .idea/
 .vscode/
@@ -46,4 +56,9 @@ yarn-error.log
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db

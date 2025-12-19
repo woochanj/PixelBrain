@@ -1,20 +1,16 @@
-from flask import Flask, render_template, jsonify, request, send_from_directory, session, redirect, url_for
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-import psutil
 import requests
+import psutil
 import time
-import socket
 import threading
-import os
 
 app = Flask(__name__)
-# Secret key needed for session. In production, use a random secure value.
-app.secret_key = 'super_secret_ollama_key' 
-CORS(app)
+# Allow CORS for React frontend
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 
 # Configuration
 OLLAMA_HOST = "http://localhost:11434"
-DASHBOARD_PASSWORD = "dncks"
 
 # Store connected clients (IPs)
 connected_clients = {}
@@ -50,59 +46,21 @@ def cleanup_clients():
 
 threading.Thread(target=cleanup_clients, daemon=True).start()
 
-# --- Routes ---
+# --- API Routes ---
 
-@app.route('/')
-def home():
-    return render_template('home.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        password = request.form.get('password')
-        if password == DASHBOARD_PASSWORD:
-            session['logged_in'] = True
-            return redirect(url_for('dashboard_view'))
-        else:
-            return render_template('login.html', error="ACCESS DENIED")
-    
-    return render_template('login.html')
-
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    return redirect(url_for('home'))
-
-@app.route('/dashboard')
-def dashboard_view():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('dashboard.html')
-
-# --- Chat App Routes ---
-
-@app.route('/chat')
-@app.route('/chat/')
-def chat_home():
-    return render_template('chat.html')
-
-# -----------------------
+@app.route('/api/health')
+def health_check():
+    return jsonify({"status": "ok", "message": "PixelBrain Backend is running"})
 
 @app.route('/api/stats')
 def get_stats():
-    # System Stats
     cpu_percent = psutil.cpu_percent(interval=None)
     memory = psutil.virtual_memory()
-    
-    # Ollama Stats
     ollama_info = get_ollama_status()
-    
-    # Client Stats - Format for frontend
     active_clients = [
         {"ip": ip, "last_seen": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(ts))}
         for ip, ts in connected_clients.items()
     ]
-
     return jsonify({
         "system": {
             "cpu": cpu_percent,
@@ -115,10 +73,5 @@ def get_stats():
     })
 
 if __name__ == '__main__':
-    # Get local IP to print access URL
-    hostname = socket.gethostname()
-    local_ip = socket.gethostbyname(hostname)
-    print(f"🚀 Dashboard running at: http://{local_ip}:5000")
-    print(f"🔒 Local access: http://127.0.0.1:5000")
-    
+    print("🚀 PixelBrain Backend running on http://localhost:5000")
     app.run(host='0.0.0.0', port=5000, debug=True)
