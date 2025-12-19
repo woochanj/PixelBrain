@@ -2,17 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Chat.css';
 
-const OLLAMA_API_URL = 'http://localhost:5000/api/generate'; // Proxy or direct? Use backend proxy if possible, or direct to Ollama if CORS allows. 
-// Wait, Ollama default CORS is strict. Better to proxy through our backend or assume user set OLLAMA_ORIGINS.
-// For now, let's use the backend as a proxy if we implement one, OR assume direct connection if we can.
-// But the Python backend is usually just for the dashboard.
-// Actually, the original app.js pointed to http://192.168.61.249:11434/api/generate.
-// I should probably use the same logic or route it through my Flask server to avoid CORS issues if I can.
-// But for now, let's keep it direct or use the environment variable URL.
-// Let's use the Python backend as a proxy to be safe? No, the user wants to use Ollama directly usually.
-// I will use strict IP or localhost. 
-const OLLAMA_URL = 'http://localhost:11434/api/generate';
-const OLLAMA_STATUS_URL = 'http://localhost:11434/api/tags';
+const OLLAMA_URL = '/api/generate';
+const OLLAMA_STATUS_URL = '/api/tags';
 const MODEL_NAME = 'gemma3:12b';
 
 function Chat() {

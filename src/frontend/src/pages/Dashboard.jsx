@@ -23,7 +23,7 @@ ChartJS.register(
     Legend
 );
 
-const STATS_URL = 'http://localhost:5000/api/stats';
+const STATS_URL = '/api/stats';
 
 function Dashboard() {
     // Auth State

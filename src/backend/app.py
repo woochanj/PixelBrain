@@ -7,7 +7,7 @@ import threading
 
 app = Flask(__name__)
 # Allow CORS for React frontend
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Configuration
 OLLAMA_HOST = "http://localhost:11434"
@@ -71,6 +71,24 @@ def get_stats():
         "ollama": ollama_info,
         "clients": active_clients
     })
+
+@app.route('/api/generate', methods=['POST'])
+def proxy_generate():
+    """Proxy chat generation to Ollama."""
+    try:
+        resp = requests.post(f"{OLLAMA_HOST}/api/generate", json=request.json, stream=True)
+        return app.response_class(resp.iter_content(chunk_size=None), content_type=resp.headers['Content-Type'])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/tags', methods=['GET'])
+def proxy_tags():
+    """Proxy model tags check to Ollama."""
+    try:
+        resp = requests.get(f"{OLLAMA_HOST}/api/tags")
+        return jsonify(resp.json())
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     print("🚀 PixelBrain Backend running on http://localhost:5000")
