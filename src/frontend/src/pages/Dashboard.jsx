@@ -23,11 +23,16 @@ ChartJS.register(
     Legend
 );
 
-const STATS_URL = '/api/stats';
+// Construct backend URL dynamically to bypass Vite proxy and get real client IP
+const API_PORT = '5000';
+const getBaseUrl = () => `${window.location.protocol}//${window.location.hostname}:${API_PORT}`;
+const STATS_URL = `${getBaseUrl()}/api/stats`;
 
 function Dashboard() {
     // Auth State
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        return localStorage.getItem('isLoggedIn') === 'true';
+    });
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState(false);
 
@@ -57,6 +62,7 @@ function Dashboard() {
         e.preventDefault();
         if (password === 'Dncks') {
             setIsLoggedIn(true);
+            localStorage.setItem('isLoggedIn', 'true');
             setLoginError(false);
         } else {
             setLoginError(true);
@@ -65,6 +71,7 @@ function Dashboard() {
 
     const handleLogout = () => {
         setIsLoggedIn(false);
+        localStorage.removeItem('isLoggedIn');
         setPassword('');
     };
 

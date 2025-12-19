@@ -1,8 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --bg-color: #121212;
-  --chat-bg: #1a1a1a;
+  --chat-bg: #404040;
   --primary: #ffcc00;
   /* Gold */
   --accent: #ff3366;

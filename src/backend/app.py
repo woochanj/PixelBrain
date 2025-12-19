@@ -29,7 +29,7 @@ def get_ollama_status():
 @app.before_request
 def track_client():
     """Middleware to track connected clients."""
-    if request.path.startswith('/static') or request.path.startswith('/api'):
+    if request.path.startswith('/static'):
         return
         
     client_ip = request.remote_addr
@@ -60,6 +60,7 @@ def get_stats():
     active_clients = [
         {"ip": ip, "last_seen": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(ts))}
         for ip, ts in connected_clients.items()
+        if ip != '127.0.0.1'
     ]
     return jsonify({
         "system": {

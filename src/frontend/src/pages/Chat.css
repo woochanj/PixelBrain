@@ -112,7 +112,7 @@
     box-shadow: 4px 4px 0 #000;
     position: relative;
     word-wrap: break-word;
-    font-family: 'VT323', monospace;
+    font-family: 'VT323', 'DungGeunMo', monospace;
 }
 
 .ai-message .message-content {
@@ -143,7 +143,7 @@ textarea {
     background-color: #fff;
     border: 3px solid var(--border-color);
     padding: 15px;
-    font-family: 'VT323', monospace;
+    font-family: 'VT323', 'DungGeunMo', monospace;
     font-size: 22px;
     resize: none;
     outline: none;

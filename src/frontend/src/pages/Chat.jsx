@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Chat.css';
 
-const OLLAMA_URL = '/api/generate';
-const OLLAMA_STATUS_URL = '/api/tags';
+// Construct backend URL dynamically to bypass Vite proxy and get real client IP
+const API_PORT = '5000';
+const getBaseUrl = () => `${window.location.protocol}//${window.location.hostname}:${API_PORT}`;
+
+const OLLAMA_URL = `${getBaseUrl()}/api/generate`;
+const OLLAMA_STATUS_URL = `${getBaseUrl()}/api/tags`;
 const MODEL_NAME = 'gemma3:12b';
 
 function Chat() {
@@ -66,7 +70,6 @@ function Chat() {
                     // Prevent duplicate stopped status
                     if (newMsgs[newMsgs.length - 1].isStopped) return newMsgs;
 
-                    newMsgs[newMsgs.length - 1].text += " [중단됨]";
                     newMsgs[newMsgs.length - 1].isStopped = true;
                 }
                 return newMsgs;
