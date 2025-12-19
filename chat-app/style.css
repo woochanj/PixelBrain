@@ -97,9 +97,26 @@ body {
 .status-dot {
     width: 12px;
     height: 12px;
-    background-color: #00ff00;
+    background-color: #555; /* Default grey */
     border: 2px solid #000;
     box-shadow: 2px 2px 0 #000;
+    transition: background-color 0.3s;
+}
+
+.status-dot.online {
+    background-color: #00ff00;
+    box-shadow: 0 0 4px #00ff00, 2px 2px 0 #000;
+}
+
+.status-dot.offline {
+    background-color: #ff3333;
+}
+
+.status-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
 }
 
 .model-badge {

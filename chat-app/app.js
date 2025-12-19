@@ -5,7 +5,53 @@ const sendBtn = document.getElementById('send-btn');
 // Configuration
 // Using specific IP for network access
 const OLLAMA_API_URL = 'http://192.168.61.249:11434/api/generate';
+// URL for checking status (using tags endpoint which is lightweight)
+const OLLAMA_STATUS_URL = 'http://192.168.61.249:11434/api/tags';
 const MODEL_NAME = 'gemma3:12b';
+
+const statusDot = document.getElementById('status-dot');
+const statusText = document.getElementById('status-text');
+
+// Connection Checker
+async function checkConnection() {
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2s timeout
+
+        const response = await fetch(OLLAMA_STATUS_URL, {
+            method: 'GET',
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+            updateStatus(true);
+        } else {
+            updateStatus(false);
+        }
+    } catch (e) {
+        updateStatus(false);
+    }
+}
+
+function updateStatus(isOnline) {
+    if (isOnline) {
+        statusDot.classList.remove('offline');
+        statusDot.classList.add('online');
+        statusText.innerText = 'ONLINE';
+        statusText.style.color = '#00ff00';
+    } else {
+        statusDot.classList.remove('online');
+        statusDot.classList.add('offline');
+        statusText.innerText = 'OFFLINE';
+        statusText.style.color = '#ff3333';
+    }
+}
+
+// Check every 5 seconds
+setInterval(checkConnection, 5000);
+// Check immediately
+checkConnection();
 
 // Helper: Add message to UI
 function addMessage(text, isUser = false) {
@@ -48,19 +94,40 @@ function createStreamMessage() {
     return { messageDiv, loadingDiv, contentDiv };
 }
 
+// State
+let abortController = null;
+
+// Icons
+const SEND_ICON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
+const STOP_ICON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>`;
+
 // Send Message Function
 async function sendMessage() {
+    // 1. Check if we need to STOP
+    if (abortController) {
+        abortController.abort();
+        abortController = null;
+        sendBtn.innerHTML = SEND_ICON;
+        return;
+    }
+
     const text = userInput.value.trim();
     if (!text) return;
 
-    // 1. Add User Message
+    // 2. Start New Message
     addMessage(text, true);
     userInput.value = '';
-    userInput.style.height = 'auto'; // Reset height
+    userInput.style.height = 'auto';
 
-    // 2. Prepare AI Response container
+    // UI: Change to Stop Button
+    sendBtn.innerHTML = STOP_ICON;
+
+    // Prepare AI Response container
     const { messageDiv, loadingDiv, contentDiv } = createStreamMessage();
-    const aiMessageContent = contentDiv; // Keep reference for streaming updates
+    const aiMessageContent = contentDiv;
+
+    // Create new abort controller for this request
+    abortController = new AbortController();
 
     try {
         const response = await fetch(OLLAMA_API_URL, {
@@ -71,8 +138,9 @@ async function sendMessage() {
             body: JSON.stringify({
                 model: MODEL_NAME,
                 prompt: text,
-                stream: true // Enable streaming
-            })
+                stream: true
+            }),
+            signal: abortController.signal // Link abort signal
         });
 
         if (!response.ok) {
@@ -88,7 +156,6 @@ async function sendMessage() {
             if (done) break;
 
             if (isFirstChunk) {
-                // Remove loading indicator and show content
                 if (messageDiv.contains(loadingDiv)) {
                     messageDiv.removeChild(loadingDiv);
                 }
@@ -97,7 +164,6 @@ async function sendMessage() {
             }
 
             const chunk = decoder.decode(value, { stream: true });
-            // Ollama sends multiple JSON objects in one chunk sometimes
             const lines = chunk.split('\n');
 
             for (const line of lines) {
@@ -108,9 +174,6 @@ async function sendMessage() {
                         aiMessageContent.innerText += json.response;
                         chatContainer.scrollTop = chatContainer.scrollHeight;
                     }
-                    if (json.done) {
-                        console.log('Generation complete');
-                    }
                 } catch (e) {
                     console.error('Error parsing JSON chunk', e);
                 }
@@ -118,19 +181,41 @@ async function sendMessage() {
         }
 
     } catch (error) {
-        // If error occurs, remove loading if present and show error
-        if (messageDiv.contains(loadingDiv)) {
-            messageDiv.removeChild(loadingDiv);
+        if (error.name === 'AbortError') {
+            // User stopped manually - Remove loading if present
+            if (messageDiv.contains(loadingDiv)) {
+                messageDiv.removeChild(loadingDiv);
+            }
+            // Show whatever was generated so far
+            aiMessageContent.style.display = 'block';
+
+            // Add Stop Indicator
+            const stopIndicator = document.createElement('span');
+            stopIndicator.innerText = ' [중단됨]';
+            stopIndicator.style.color = '#ff4444';
+            stopIndicator.style.fontWeight = 'bold';
+            stopIndicator.style.fontSize = '0.9em';
+            aiMessageContent.appendChild(stopIndicator);
+
+            console.log('Generation stopped by user');
+        } else {
+            // Real Error
+            if (messageDiv.contains(loadingDiv)) {
+                messageDiv.removeChild(loadingDiv);
+            }
+            aiMessageContent.style.display = 'block';
+
+            const errorContent = document.createElement('div');
+            errorContent.innerText = `Error: ${error.message}`;
+            errorContent.style.color = 'red';
+
+            aiMessageContent.innerHTML = '';
+            aiMessageContent.appendChild(errorContent);
         }
-        aiMessageContent.style.display = 'block';
-
-        const errorContent = document.createElement('div');
-        errorContent.innerText = `Error: ${error.message}\nMake sure Ollama is running and OLLAMA_ORIGINS="*" is set if connecting from a browser.`;
-        errorContent.style.color = 'red';
-
-        // Replace existing hidden content or append
-        aiMessageContent.innerHTML = '';
-        aiMessageContent.appendChild(errorContent);
+    } finally {
+        // Reset UI back to Send State
+        abortController = null;
+        sendBtn.innerHTML = SEND_ICON;
     }
 }
 
