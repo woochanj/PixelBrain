@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
 import {
@@ -10,6 +10,7 @@ import {
     Title,
     Tooltip,
     Legend,
+    ChartOptions
 } from 'chart.js';
 import './Dashboard.css';
 
@@ -25,28 +26,56 @@ ChartJS.register(
 
 // Construct backend URL dynamically to bypass Vite proxy and get real client IP
 const API_PORT = '5000';
-const getBaseUrl = () => `${window.location.protocol}//${window.location.hostname}:${API_PORT}`;
+const getBaseUrl = (): string => `${window.location.protocol}//${window.location.hostname}:${API_PORT}`;
 const STATS_URL = `${getBaseUrl()}/api/stats`;
+
+interface SystemStats {
+    cpu: number;
+    ram_percent: number;
+    ram_used_gb: number;
+    ram_total_gb: number;
+}
+
+interface OllamaModel {
+    name: string;
+    size: number;
+}
+
+interface OllamaStats {
+    status: string;
+    models: OllamaModel[];
+}
+
+interface ClientInfo {
+    ip: string;
+    last_seen: string;
+}
+
+interface DashboardData {
+    system: SystemStats;
+    ollama: OllamaStats;
+    clients: ClientInfo[];
+}
 
 function Dashboard() {
     // Auth State
-    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
         return localStorage.getItem('isLoggedIn') === 'true';
     });
-    const [password, setPassword] = useState('');
-    const [loginError, setLoginError] = useState(false);
+    const [password, setPassword] = useState<string>('');
+    const [loginError, setLoginError] = useState<boolean>(false);
 
-    const [stats, setStats] = useState({
+    const [stats, setStats] = useState<DashboardData>({
         system: { cpu: 0, ram_percent: 0, ram_used_gb: 0, ram_total_gb: 0 },
         ollama: { status: 'checking', models: [] },
         clients: []
     });
 
     // Chart Data State
-    const [cpuData, setCpuData] = useState(Array(20).fill(0));
-    const [ramData, setRamData] = useState(Array(20).fill(0));
+    const [cpuData, setCpuData] = useState<number[]>(Array(20).fill(0));
+    const [ramData, setRamData] = useState<number[]>(Array(20).fill(0));
 
-    const chartOptions = {
+    const chartOptions: ChartOptions<'line'> = {
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
@@ -58,7 +87,7 @@ function Dashboard() {
     };
 
     // Login Handler
-    const handleLogin = (e) => {
+    const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         if (password === 'Dncks') {
             setIsLoggedIn(true);
@@ -82,7 +111,7 @@ function Dashboard() {
         const fetchData = async () => {
             try {
                 const res = await fetch(STATS_URL);
-                const data = await res.json();
+                const data: DashboardData = await res.json();
                 setStats(data);
 
                 // Update charts
@@ -243,7 +272,7 @@ function Dashboard() {
                                 </tr>
                             ))
                         ) : (
-                            <tr><td colSpan="2">No active clients</td></tr>
+                            <tr><td colSpan={2}>No active clients</td></tr>
                         )}
                     </tbody>
                 </table>

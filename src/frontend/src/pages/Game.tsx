@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Game.css';
 
 function Game() {
-    const [score, setScore] = useState(0);
+    const [score, setScore] = useState<number>(0);
 
     return (
         <div className="game-container">

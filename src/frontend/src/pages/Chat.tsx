@@ -1,24 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Chat.css';
 
 // Construct backend URL dynamically to bypass Vite proxy and get real client IP
 const API_PORT = '5000';
-const getBaseUrl = () => `${window.location.protocol}//${window.location.hostname}:${API_PORT}`;
+const getBaseUrl = (): string => `${window.location.protocol}//${window.location.hostname}:${API_PORT}`;
 
 const OLLAMA_URL = `${getBaseUrl()}/api/generate`;
 const OLLAMA_STATUS_URL = `${getBaseUrl()}/api/tags`;
 const MODEL_NAME = 'gemma3:12b';
 
+interface Message {
+    text: string;
+    isUser: boolean;
+    isStopped?: boolean;
+    isError?: boolean;
+}
+
 function Chat() {
-    const [messages, setMessages] = useState([]);
-    const [input, setInput] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState('CHECKING');
-    const [isOnline, setIsOnline] = useState(false);
-    const [isThinking, setIsThinking] = useState(false);
-    const chatContainerRef = useRef(null);
-    const abortControllerRef = useRef(null);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
+    const [status, setStatus] = useState<string>('CHECKING');
+    const [isOnline, setIsOnline] = useState<boolean>(false);
+    const [isThinking, setIsThinking] = useState<boolean>(false);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     // Auto-scroll
     useEffect(() => {
@@ -110,6 +117,7 @@ function Chat() {
                 signal: controller.signal
             });
 
+            if (!response.body) throw new Error('ReadableStream not supported');
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let aiText = '';
@@ -145,7 +153,7 @@ function Chat() {
                     }
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             if (error.name !== 'AbortError') {
                 setMessages(prev => [...prev, { text: "Error: " + error.message, isUser: false, isError: true }]);
             }
@@ -197,7 +205,7 @@ function Chat() {
                             }
                         }}
                         placeholder="Ask anything..."
-                        rows="1"
+                        rows={1}
                         style={{ height: 'auto' }}
                     />
                     <button onClick={handleSend} id="send-btn" className={loading ? 'stop-mode' : ''}>
