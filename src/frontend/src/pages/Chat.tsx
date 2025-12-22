@@ -1,6 +1,6 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import './Chat.css';
 
 // Construct backend URL dynamically to bypass Vite proxy and get real client IP
 const API_PORT = '5000';
@@ -166,35 +166,70 @@ function Chat() {
     };
 
     return (
-        <div className="main-container">
-            <header className="chat-header">
-                <div className="header-left">
-                    <Link to="/" className="pixel-btn" style={{ padding: '5px 10px', fontSize: '10px' }}>
-                        ←
+        <div className="w-full max-w-[800px] h-screen flex flex-col bg-[#202020] border-x-4 border-black mx-auto">
+            <header className="p-5 border-b-4 border-black flex items-center justify-between gap-4 shadow-[0_4px_0_rgba(0,0,0,0.2)] z-10 shrink-0" style={{ backgroundColor: '#f7d51d' }}>
+                <div className="flex items-center gap-4">
+                    <Link to="/" className="flex items-center justify-center w-8 h-8 p-0 no-underline bg-white border-2 border-black shadow-[2px_2px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-transform hover:bg-gray-100">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="black" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                            <rect x="6" y="2" width="2" height="2" />
+                            <rect x="4" y="4" width="2" height="2" />
+                            <rect x="2" y="6" width="2" height="2" />
+                            <rect x="0" y="8" width="2" height="2" />
+                            <rect x="2" y="10" width="2" height="2" />
+                            <rect x="4" y="12" width="2" height="2" />
+                            <rect x="6" y="14" width="2" height="2" />
+                            <rect x="6" y="8" width="10" height="2" />
+                        </svg>
                     </Link>
-                    <h1>PixelBrain Chat</h1>
+                    <h1 className="font-['Press_Start_2P',cursive] text-[20px] text-black m-0 drop-shadow-[2px_2px_0_#fff]">PixelBrain Chat</h1>
                 </div>
-                <div className="status-indicator">
-                    <div className={`status-dot ${isOnline ? 'online' : 'offline'}`}></div>
-                    <span className="status-text">{status}</span>
-                    <span className="model-badge">12B Model</span>
+                <div className="flex items-center gap-2.5">
+                    <div className={`w-3 h-3 border-2 border-black shadow-[2px_2px_0_#000] transition-colors duration-300 ${isOnline ? 'bg-[#3fb950] shadow-[0_0_4px_#00f,2px_2px_0_#000]' : 'bg-[#f85149]'}`}></div>
+                    <span className="font-['Press_Start_2P',cursive] text-[10px] text-black bg-white/10 px-1 rounded drop-shadow-none">{status}</span>
+                    <span className="font-['Press_Start_2P',cursive] text-[10px] bg-black text-white px-2.5 py-1.5 ml-1">12B Model</span>
                 </div>
             </header>
 
-            <div className="chat-container" ref={chatContainerRef}>
+            <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5 bg-[#404040]" ref={chatContainerRef}>
                 {messages.map((msg, idx) => (
-                    <div key={idx} className={`message ${msg.isUser ? 'user-message' : 'ai-message'}`}>
-                        <div className="message-content">
+                    <div key={idx} className={`max-w-[85%] flex flex-col animate-[fadeIn_0.3s_steps(5)] ${msg.isUser ? 'self-end' : 'self-start'}`}>
+                        {/* User: Blue (#4d9be6), AI: Dark Grey (#2d2d3a) */}
+                        <div className={`p-4 text-[18px] leading-[1.6] border-[3px] border-black shadow-[4px_4px_0_#000] relative break-words font-['DungGeunMo',sans-serif] ${msg.isUser ? 'bg-[#4d9be6] text-black' : 'bg-[#2d2d3a] text-white'}`}>
                             {msg.text}
-                            {msg.isStopped && <span style={{ color: '#ff4444', fontWeight: 'bold' }}> [중단됨]</span>}
+
+                            {/* Thinking State (Empty Message) */}
+                            {!msg.isUser && !msg.text && (
+                                <span className="animate-pulse" style={{ color: '#f7d51d' }}>Thinking... ▍</span>
+                            )}
+
+                            {/* Typing State (Streaming Text) */}
+                            {!msg.isUser && msg.text && loading && idx === messages.length - 1 && (
+                                <span className="animate-pulse inline-block ml-1">▍</span>
+                            )}
+
+                            {msg.isStopped && <span className="text-[#f85149] font-bold"> [중단됨]</span>}
                         </div>
                     </div>
                 ))}
-                {loading && <div className="loading-indicator">{isThinking ? "Thinking..." : "Typing..."}</div>}
+
+                {messages.length === 0 && (
+                    <div className="self-start animate-[fadeIn_0.3s_steps(5)] max-w-[85%]">
+                        <div className="p-4 text-[18px] leading-[1.6] border-[3px] border-black shadow-[4px_4px_0_#000] relative break-words font-['DungGeunMo',sans-serif] bg-[#2d2d3a] text-white">
+                            안녕! 뭐 하고 있어? 😊 궁금한 거나 필요한 거 있으면 언제든지 말해줘.
+                        </div>
+                    </div>
+                )}
+
+                {/* Typing Indicator at Bottom */}
+                {loading && !isThinking && (
+                    <div className="font-['Press_Start_2P',cursive] text-[12px] mt-2.5 animate-pulse ml-1" style={{ color: '#f7d51d' }}>
+                        Typing...
+                    </div>
+                )}
             </div>
 
-            <div className="input-area">
-                <div className="input-wrapper">
+            <div className="p-5 border-t-4 border-black shrink-0" style={{ backgroundColor: '#f7d51d' }}>
+                <div className="flex gap-2.5 items-end">
                     <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -206,17 +241,22 @@ function Chat() {
                         }}
                         placeholder="Ask anything..."
                         rows={1}
-                        style={{ height: 'auto' }}
+                        className="flex-1 bg-white border-[3px] border-black p-4 font-['DungGeunMo',sans-serif] text-[20px] resize-none outline-none shadow-[inset_4px_4px_0_#ccc] text-black h-auto min-h-[60px]"
                     />
-                    <button onClick={handleSend} id="send-btn" className={loading ? 'stop-mode' : ''}>
+                    <button
+                        onClick={handleSend}
+                        className="flex items-center justify-center border-[3px] border-black p-4 cursor-pointer shadow-[4px_4px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-transform duration-100 w-[60px] h-[60px]"
+                        style={{ backgroundColor: loading ? '#e02c2c' : '#4d9be6' }}
+                    >
+                        {/* Button Icon Color Adjustment */}
                         {loading ? (
-                            // Stop Icon
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <rect x="6" y="6" width="12" height="12" fill="currentColor" />
+                            // Stop Icon (White on Red)
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                                <rect x="6" y="6" width="12" height="12" fill="white" />
                             </svg>
                         ) : (
-                            // Send Icon
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            // Send Icon (Black on Blue)
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2">
                                 <line x1="22" y1="2" x2="11" y2="13"></line>
                                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                             </svg>

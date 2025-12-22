@@ -3,27 +3,16 @@ import { Link } from 'react-router-dom';
 
 function Home() {
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100vh',
-            textAlign: 'center',
-            backgroundColor: '#121212'
-        }}>
-            <h1 style={{
-                fontSize: '30px',
-                color: '#f7d51d',
-                textShadow: '4px 4px 0px #e02c2c, 8px 8px 0px #242424',
-                marginBottom: '50px'
-            }}>PixelBrain 16-BIT</h1>
+        <div className="flex flex-col items-center justify-center h-screen text-center bg-pixel-bg">
+            <h1 className="text-[30px] text-pixel-yellow mb-[50px] shadow-pixel">
+                PixelBrain 16-BIT
+            </h1>
 
-            <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Link to="/chat" className="pixel-btn btn-chat" style={{ width: '220px', height: '180px' }}>
+            <div className="flex gap-10 flex-wrap justify-center">
+                <Link to="/chat" className="pixel-btn btn-chat w-[220px] h-[180px]">
                     <span className="icon">
                         {/* Solid Square Bubble */}
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="block">
                             <path d="M2 2H22V18H18V22H14V18H2V2ZM4 4V16H20V4H4Z" fill="white" />
                             <rect x="5" y="6" width="14" height="2" fill="white" />
                             <rect x="5" y="10" width="10" height="2" fill="white" />
@@ -33,10 +22,10 @@ function Home() {
                     START CHAT
                 </Link>
 
-                <Link to="/dashboard" className="pixel-btn btn-dash" style={{ width: '220px', height: '180px' }}>
+                <Link to="/dashboard" className="pixel-btn btn-dash w-[220px] h-[180px]">
                     <span className="icon">
                         {/* Pixel Bar Chart */}
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="block">
                             <path d="M2 2H4V20H22V22H2V2Z" fill="white" />
                             <rect x="6" y="10" width="3" height="10" fill="white" />
                             <rect x="11" y="6" width="3" height="14" fill="white" />
@@ -46,10 +35,10 @@ function Home() {
                     DASHBOARD
                 </Link>
 
-                <Link to="/game" className="pixel-btn btn-game" style={{ backgroundColor: '#2ecc71', width: '220px', height: '180px' }}>
+                <Link to="/game" className="pixel-btn btn-game w-[220px] h-[180px] bg-pixel-green">
                     <span className="icon">
                         {/* NES Controller Icon */}
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="block">
                             {/* Controller Body */}
                             <rect x="2" y="8" width="20" height="8" fill="white" />
                             {/* D-Pad */}
