@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Chat from './pages/Chat';
 import Dashboard from './pages/Dashboard';
 import Game from './pages/Game';
+import Excel from './pages/Excel';
 import './index.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/excel" element={<Excel />} />
         </Routes>
       </div>
     </Router>

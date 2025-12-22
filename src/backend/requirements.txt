@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pandas
+requests
+openpyxl
+python-multipart
+flask
+flask-cors
+psutil
