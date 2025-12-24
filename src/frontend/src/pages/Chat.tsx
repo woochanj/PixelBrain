@@ -199,15 +199,15 @@ function Chat() {
 
                             {/* Thinking State (Empty Message) */}
                             {!msg.isUser && !msg.text && (
-                                <span className="animate-pulse" style={{ color: '#f7d51d' }}>Thinking... ▍</span>
+                                <span className="animate-pulse" style={{ color: '#f7d51d' }}>Thinking...</span>
                             )}
 
                             {/* Typing State (Streaming Text) */}
                             {!msg.isUser && msg.text && loading && idx === messages.length - 1 && (
-                                <span className="animate-pulse inline-block ml-1">▍</span>
+                                <span className="animate-pulse inline-block ml-1">...</span>
                             )}
 
-                            {msg.isStopped && <span className="text-[#f85149] font-bold"> [중단됨]</span>}
+                            {msg.isStopped && <span className="text-[#f85149] font-bold"> [Stopped]</span>}
                         </div>
                     </div>
                 ))}
@@ -215,7 +215,7 @@ function Chat() {
                 {messages.length === 0 && (
                     <div className="self-start animate-[fadeIn_0.3s_steps(5)] max-w-[85%]">
                         <div className="p-4 text-[18px] leading-[1.6] border-[3px] border-black shadow-[4px_4px_0_#000] relative break-words font-['DungGeunMo',sans-serif] bg-[#2d2d3a] text-white">
-                            안녕! 뭐 하고 있어? 😊 궁금한 거나 필요한 거 있으면 언제든지 말해줘.
+                            Welcome! Ask a question to get started.
                         </div>
                     </div>
                 )}
